@@ -2,104 +2,99 @@ package com.robertobubalo;
 //By Roberto Bubalo 15.7.2017
 // Program uses class MyLine to draw random lines.
 
-        import sun.plugin2.util.ColorUtil;
-
         import java.awt.Color;
         import java.awt.Graphics;
         import java.util.Random;
-        import javax.swing.JPanel;
+        import javax.swing.*;
+
 
 public class DrawPanel extends JPanel
 {
     private Random randomNumbers = new Random();
-    private MyLine lines[]; // array on lines
-    private MyRect rects[]; // array on rectangles
-    private MyOval ovals[]; // array on ovals
+
+    private MyShape randomShapes[]; // myshape array saving all the shapes
+    private int counter[] = new int[]{0,0,0};   // int array used for saving information how many objects of which type were created
+    private Boolean textError= false;   // extra functionality in case of wrong input
 
     // constructor, creates a panel with random shapes
     public DrawPanel()
     {
+        // opening inputDialog to check how many shapes should we generate
+        String popup= JOptionPane.showInputDialog("Please input a number how many \nshapes you would like to create: " +
+                "\n Press cancel to random.");
+
+
         setBackground( Color.WHITE );
 
-        lines = new MyLine[ 1 + randomNumbers.nextInt( 5 ) ];
-        rects = new MyRect[ 1 + randomNumbers.nextInt(5)];
-        ovals = new MyOval[ 1 + randomNumbers.nextInt(5)];
 
-
-
-        // create lines
-        for ( int count = 0; count < lines.length; count++ )
+        // added extra functionality if cancel is pressed
+        if(popup==null)
         {
-            // generate random coordinates
+           // getting random length of array, min 3 max 18
+        randomShapes = new MyShape[3 + randomNumbers.nextInt(15)];
+        }else if(popup.matches("[0-9]*")){
+            // setting the inputed number as a array size
+            randomShapes = new MyShape[Integer.valueOf(popup)];
+        }
+        else{
+            // not creating any shapes because invalid input
+           randomShapes = new MyShape[0];
+            textError = true;
+        }
+
+
+
+        // looping through array
+        for (int count = 0; count < randomShapes.length; count++){
+            // random generator to determine which shape will be created
+            int a = randomNumbers.nextInt(3);
+            // generating all the coordinates and color
             int x1 = randomNumbers.nextInt( 300 );
             int y1 = randomNumbers.nextInt( 300 );
             int x2 = randomNumbers.nextInt( 300 );
             int y2 = randomNumbers.nextInt( 300 );
-
-            // generate a random color
             Color color = new Color( randomNumbers.nextInt( 256 ),
                     randomNumbers.nextInt( 256 ), randomNumbers.nextInt( 256 ) );
 
-            // add the line to the list of lines to be displayed
-            lines[ count ] = new MyLine( x1, y1, x2, y2, color );
-        } // end for
+            switch (a){
+                case 0: // case 0 where we create a line
+                    randomShapes[ count ] = new MyLine( x1, y1, x2, y2, color );
+                    counter[0] +=1;
+                    break;
+                case 1: // case 1 where we create rectangle
+                    randomShapes[ count ] = new MyRect( x1, y1, x2, y2, color, randomNumbers.nextBoolean() );
+                    counter[1] +=1;
+                    break;
+                case 2: // case 2 where we create oval
+                    randomShapes[ count ] = new MyOval( x1, y1, x2, y2, color, randomNumbers.nextBoolean() );
+                    counter[2] +=1;
+                    break;
 
-        // create rectangles
-        for ( int count = 0; count < rects.length; count++ )
-        {
-            // generate random coordinates
-            int x1 = randomNumbers.nextInt( 300 );
-            int y1 = randomNumbers.nextInt( 300 );
-            int x2 = randomNumbers.nextInt( 300 );
-            int y2 = randomNumbers.nextInt( 300 );
+            }   // end switch
 
-            // generate a random color
-            Color color = new Color( randomNumbers.nextInt( 256 ),
-                    randomNumbers.nextInt( 256 ), randomNumbers.nextInt( 256 ) );
+        }   // end for
 
-            // add the line to the list of lines to be displayed
-            rects[ count ] = new MyRect( x1, y1, x2, y2, color, randomNumbers.nextBoolean() );
-        } // end for
-
-        // create Ovals
-        for ( int count = 0; count < ovals.length; count++ )
-        {
-            // generate random coordinates
-            int x1 = randomNumbers.nextInt( 300 );
-            int y1 = randomNumbers.nextInt( 300 );
-            int x2 = randomNumbers.nextInt( 300 );
-            int y2 = randomNumbers.nextInt( 300 );
-
-            // generate a random color
-            Color color = new Color( randomNumbers.nextInt( 256 ),
-                    randomNumbers.nextInt( 256 ), randomNumbers.nextInt( 256 ) );
-
-            // add the line to the list of lines to be displayed
-            // random boolean to see if the shape is empty or filled
-            ovals[ count ] = new MyOval( x1, y1, x2, y2, color, randomNumbers.nextBoolean() );
-        } // end for
 
     } // end DrawPanel constructor
 
     // method for south jlabel property
     public String getStatusText(){
-        return "Lines: " + lines.length + ", Ovals: " + ovals.length + ", Rectangles: " + rects.length;
+        return "Lines: " + counter[0] + ", Ovals: " + counter[1] + ", Rectangles: " + counter[2];
+    }
+
+    //
+    public Boolean getTextError() {
+        return textError;
     }
 
     // for each shape array, draw the individual shapes
     public void paintComponent( Graphics g )
     {
         super.paintComponent( g );
+            // go through myShape array and draw needed shape using polymorphism
+        for (MyShape myShape : randomShapes)
+            myShape.draw( g );
 
-        // draw the lines
-        for ( MyLine line : lines )
-            line.draw( g );
-        // draw the rectangles
-        for ( MyRect rect : rects)
-            rect.draw( g );
-        // draw the ovals
-        for ( MyOval oval : ovals)
-            oval.draw( g );
 
 
     } // end method

@@ -8,6 +8,7 @@ import java.awt.*;
 public class Main {
 
     public static void main(String[] args) {
+
         DrawPanel panel = new DrawPanel();
         JFrame application = new JFrame();
 
@@ -20,9 +21,17 @@ public class Main {
         application.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         application.add( panel );
         application.setSize( 600, 600 );
-        application.setVisible( true );
+        application.setLocationRelativeTo(null);
 
+        // added error message if unexpected characters entered in input dialog
+        if(panel.getTextError()){
+            JOptionPane.showMessageDialog(panel,"No shapes will be drawn. Please only input numbers");
+            statusBar.setText("Error. No shapes displayed!");
+        }
         // adding the label to the frame
         application.add(statusBar, BorderLayout.SOUTH);
+
+        application.setVisible( true );
+
     }
 }
