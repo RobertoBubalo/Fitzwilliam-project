@@ -1,6 +1,7 @@
 package com.robertobubalo;
-//By Roberto Bubalo 15.7.2017
-// Program uses class MyLine to draw random lines.
+//By Roberto Bubalo 1.8.2017
+// Program uses class MyShape abstract method Draw which is overriden further for each
+// specific shape type to draw
 
         import java.awt.Color;
         import java.awt.Graphics;

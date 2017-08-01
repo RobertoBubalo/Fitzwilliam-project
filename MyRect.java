@@ -1,78 +1,24 @@
 package com.robertobubalo;
-//By Roberto Bubalo 15.7.2017
-
-
+//By Roberto Bubalo 1.8.2017
 
 import java.awt.*;
 
 /**
  * Created by rober on 15/07/2017.
  */
-public class MyRect extends MyShape{
+public class MyRect extends MyBoundedShape{
 
-    private Boolean flag;
-
-    // constructor with no arguments and
+    // inherited empty constructor default all 0 values and black color
     public MyRect() {
       super();
-      setFlag(false);
-
     }
 
-
-    // constructor with all the arguments
+    // inherited constructor with all the arguments and setting the flag
     public MyRect(int x1, int x2, int y1, int y2, Color color, Boolean flag) {
-        //setting the values using the set methodes instead assigning it locally
-        super(x1, y1, x2, y2, color);
-        setFlag(flag);
+       super(x1,y1,x2,y2,color,flag);
     }
 
-    // checking which X coordinate is smaller and returning it
-    // used for determining which value to use for drawing the shapes
-    public int getUpperLeftX() {
-        if (getX1() > getX2()){
-            return getX2();
-        }else{
-            return getX1();
-        }
-    }
-    // checking which Y coordinate is smaller and returning it
-    // used for determining which value to use for drawing the shapes
-    public int getUpperLeftY(){
-        if(getY1() > getY2()){
-            return getY2();
-        }else{
-            return getY1();
-        }
-    }
-    // getting absolute X value
-    public int getWidth(){
-        if( getX1()> getX2()){
-            return Math.abs(getX2()-getX1());
-        }else{
-            return Math.abs(getX1()-getX2());
-        }
-
-    }
-    // getting absolute Y value
-    public int getHeight(){
-        if (getY1()>getY2()){
-            return Math.abs(getY2()-getY1());
-        }else{
-            return Math.abs(getY1()-getY2());
-        }
-
-    }
-
-    public Boolean getFlag() {
-        return flag;
-    }
-
-
-    public void setFlag(Boolean flag) {
-        this.flag = flag;
-    }
-
+    //overriden draw method
     @Override
     public void draw( Graphics g )
     {
